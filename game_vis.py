@@ -20,7 +20,7 @@ usr_color = 255, 23, 62
 usr_color_in_inv = 114, 135, 138
 
 clock = pygame.time.Clock()
-FPS = 90
+FPS = 60
 invisible = False
 can_jump = False
 can_tp_up = False
@@ -40,16 +40,20 @@ def game_running():
                 quit()
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE]:
-            can_jump = True
-
         if keys[pygame.K_w]:
+            print('w')
             can_tp_up = True
 
+        if keys[pygame.K_SPACE]:
+            print('SPACE')
+            can_jump = True
+
         if keys[pygame.K_s]:
+            print('s')
             can_tp_down = True
 
         if keys[pygame.K_z]:
+            print('Z')
             invisible = True
 
         if can_jump:
@@ -106,7 +110,9 @@ def teleport_down():
 
 
 def cube_inv():
-    pass
+    global invisible
+    print('меняю цвет')
+    invisible = False
 
 
 
