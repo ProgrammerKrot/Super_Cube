@@ -4,7 +4,7 @@ import time
 pygame.init()
 
 display_width = 1280
-display_height = 920
+display_height = 1024
 
 display = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('Teleportation cube')
@@ -12,15 +12,16 @@ pygame.display.set_caption('Teleportation cube')
 icon = pygame.image.load('свас.jpg')
 pygame.display.set_icon(icon)
 
+background = pygame.image.load(r'background.jpg')
+
 usr_width = 75
 usr_height = 75
 usr_x = display_width // 3 - 200
 usr_y = display_height - usr_height - 450
-usr_color = 255, 23, 62
-usr_color_in_inv = 114, 135, 138
+usr_image = pygame.image.load('usr.jpg').convert()
 
 clock = pygame.time.Clock()
-FPS = 60
+FPS = 90
 invisible = False
 can_jump = False
 can_tp_up = False
@@ -57,6 +58,7 @@ def game_running():
             invisible = True
 
         if keys[pygame.K_d] or keys[pygame.K_a]:
+            print('уже иду!')
             go()
 
         if can_jump:
@@ -73,15 +75,15 @@ def game_running():
         if invisible:
             cube_inv()
 
+        display.blit(background, (0, 0))
 
-        display.fill((92, 86, 26))
-
-        pygame.draw.rect(display, (usr_color), (usr_x, usr_y, usr_width, usr_height))
+        draw_usr()
         draw_terra()
 
         pygame.display.update()
         clock.tick(FPS)
-
+def draw_usr():
+    display.blit(usr_image, (usr_x, usr_y))
 
 def jump():
     global usr_y, count_jump, can_jump
@@ -127,12 +129,10 @@ def go():
         usr_x -= 2
 
 
-
 def draw_terra():
     pygame.draw.line(display, (0, 0, 0), [0, display_height - 150], [1280, display_height - 150], 5)
     pygame.draw.line(display, (0, 0, 0), [0, display_height - 450], [1280, display_height - 450], 5)
     pygame.draw.line(display, (0, 0, 0), [0, display_height - 750], [1280, display_height - 750], 5)
-
 
 
 game_running()
