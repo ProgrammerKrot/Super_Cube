@@ -56,6 +56,9 @@ def game_running():
             print('Z')
             invisible = True
 
+        if keys[pygame.K_d] or keys[pygame.K_a]:
+            go()
+
         if can_jump:
             jump()
 
@@ -113,6 +116,15 @@ def cube_inv():
     global invisible
     print('меняю цвет')
     invisible = False
+
+
+def go():
+    global usr_x
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_d]:
+        usr_x += 2
+    if keys[pygame.K_a]:
+        usr_x -= 2
 
 
 
