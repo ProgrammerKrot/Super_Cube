@@ -14,11 +14,14 @@ pygame.display.set_icon(icon)
 
 background = pygame.image.load(r'background.jpg')
 
+enemy_width, enemy_height = 35, 70
+enemy_x, enemy_y = display_width - 50, display_height - enemy_height - 150
+
 usr_width = 75
 usr_height = 75
 usr_x = display_width // 3 - 200
-usr_y = display_height - usr_height - 450
-usr_image = pygame.image.load('usr.jpg').convert()
+usr_y = display_height - usr_height - 475
+usr_image = pygame.image.load('usr_1.png').convert()
 
 clock = pygame.time.Clock()
 FPS = 90
@@ -30,9 +33,27 @@ time_over = False
 count_jump = 30
 
 
+class Enemy_classic:
+    def __init__(self, x, y, width, height, speed):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.speed = speed
+
+    def move(self):
+        if self.x >= -self.width:
+            pygame.draw.rect(display, (30, 144, 255), (self.x, self.y, self.width, self.height))
+            self.x -= self.speed
+        else:
+            self.x = display_width - 50
+
+
 def game_running():
     global can_jump, can_tp_up, can_tp_down, invisible, usr_color
     game = True
+    enemy_arr_c = []
+    create_enemy_classic(enemy_arr_c)
 
     while game:
         for event in pygame.event.get():
@@ -66,16 +87,17 @@ def game_running():
 
         if can_tp_down:
             teleport_down()
-            print('y')
+            print('Должен идти вниз')
 
         if can_tp_up:
             teleport_up()
-            print('x')
+            print('Должен идти вверх')
 
         if invisible:
             cube_inv()
 
         display.blit(background, (0, 0))
+        draw_enemy_classic(enemy_arr_c)
 
         draw_usr()
         draw_terra()
@@ -124,15 +146,28 @@ def go():
     global usr_x
     keys = pygame.key.get_pressed()
     if keys[pygame.K_d]:
-        usr_x += 2
+        if usr_x <= 1205: #чтобы персонаж не выходил за пределы окна
+            usr_x += 2
     if keys[pygame.K_a]:
-        usr_x -= 2
+        if usr_x >= 0:#чтобы персонаж не выходил за пределы окна
+            usr_x -= 2
 
 
 def draw_terra():
     pygame.draw.line(display, (0, 0, 0), [0, display_height - 150], [1280, display_height - 150], 5)
     pygame.draw.line(display, (0, 0, 0), [0, display_height - 450], [1280, display_height - 450], 5)
     pygame.draw.line(display, (0, 0, 0), [0, display_height - 750], [1280, display_height - 750], 5)
+
+
+def create_enemy_classic(array):
+    array.append(Enemy_classic(display_width - 50, display_height - 170, 20, 70, 7))
+    array.append(Enemy_classic(display_width + 300, display_height - 150, 30, 50, 7))
+    array.append(Enemy_classic(display_width - 500, display_height - 145, 40, 45, 7))
+
+
+def draw_enemy_classic(array):
+    for enemy_classic in array:
+        Enemy_classic.move(enemy_classic)
 
 
 game_running()
