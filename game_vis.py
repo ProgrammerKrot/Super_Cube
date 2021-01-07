@@ -1,5 +1,22 @@
 import pygame
 import time
+import os
+
+
+def load_image(name, color_key=None):
+    fullname = os.path.join('data', name)
+    print(fullname)
+    try:
+        image = pygame.image.load(fullname)
+    except pygame.error as message:
+        print('Не удается загрузить', fullname)
+        raise SystemExit(message)
+    if color_key is not None:
+        if color_key == -1:
+            color_key = image.get_at((0, 0))
+        image.set_colorkey(color_key)
+    return image
+
 
 pygame.init()
 
@@ -21,7 +38,7 @@ usr_width = 75
 usr_height = 75
 usr_x = display_width // 3 - 200
 usr_y = display_height - usr_height - 475
-usr_image = pygame.image.load('usr_1.png').convert()
+usr_image = load_image('usr_1.png')
 
 clock = pygame.time.Clock()
 FPS = 90
@@ -31,7 +48,6 @@ can_tp_up = False
 can_tp_down = False
 time_over = False
 count_jump = 30
-
 
 class Enemy_classic:
     def __init__(self, x, y, width, height, speed):
@@ -62,15 +78,15 @@ def game_running():
                 quit()
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
+        if keys[pygame.K_UP]:
             print('w')
             can_tp_up = True
 
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_w]:
             print('SPACE')
             can_jump = True
 
-        if keys[pygame.K_s]:
+        if keys[pygame.K_DOWN]:
             print('s')
             can_tp_down = True
 
@@ -81,6 +97,9 @@ def game_running():
         if keys[pygame.K_d] or keys[pygame.K_a]:
             print('уже иду!')
             go()
+
+        if keys[pygame.K_ESCAPE]:
+            pause()
 
         if can_jump:
             jump()
@@ -96,6 +115,9 @@ def game_running():
         if invisible:
             cube_inv()
 
+        if keys[pygame.K_BACKSPACE]:
+            game = False
+
         display.blit(background, (0, 0))
         draw_enemy_classic(enemy_arr_c)
 
@@ -104,8 +126,11 @@ def game_running():
 
         pygame.display.update()
         clock.tick(FPS)
+
+
 def draw_usr():
     display.blit(usr_image, (usr_x, usr_y))
+
 
 def jump():
     global usr_y, count_jump, can_jump
@@ -119,21 +144,18 @@ def jump():
 
 def teleport_up():
     global usr_y, can_tp_up, display_height, usr_height
-    if usr_y == display_height - usr_height - 450 or usr_y == display_height - usr_height - 450 + 300:
-        print('Лети вверх')
-        usr_y -= 300
-        time.sleep(0.2)
-        can_tp_up = False
+    print('Лети вверх')
+    usr_y -= 300
+    time.sleep(0.2)
+    can_tp_up = False
 
 
 def teleport_down():
     global usr_y, can_tp_down, display_height, usr_height
-    if usr_y == display_height - usr_height - 450 or \
-            usr_y == display_height - usr_height - 450 - 300:
-        print('Лети вниз')
-        usr_y += 300
-        time.sleep(0.2)
-        can_tp_down = False
+    print('Лети вниз')
+    usr_y += 300
+    time.sleep(0.2)
+    can_tp_down = False
 
 
 def cube_inv():
@@ -160,14 +182,39 @@ def draw_terra():
 
 
 def create_enemy_classic(array):
-    array.append(Enemy_classic(display_width - 50, display_height - 170, 20, 70, 7))
-    array.append(Enemy_classic(display_width + 300, display_height - 150, 30, 50, 7))
-    array.append(Enemy_classic(display_width - 500, display_height - 145, 40, 45, 7))
+    array.append(Enemy_classic(display_width - 50, display_height - 240, 40, 90, 9))
+    array.append(Enemy_classic(display_width + 300, display_height - 220, 60, 70, 5))
+    array.append(Enemy_classic(display_width - 500, display_height - 165, 200, 15, 3))
 
 
 def draw_enemy_classic(array):
     for enemy_classic in array:
         Enemy_classic.move(enemy_classic)
+
+
+def print_text(massage, x, y, font_color = (0, 0, 0), font_type = 'fonts.otf', font_size = 40):
+    font_type = pygame.font.Font(font_type, font_size)
+    text = font_type.render(massage, True, font_color)
+    display.blit(text, (x, y))
+
+
+
+def pause():
+    paused = True
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        print_text('Paused', 160, 300)
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RETURN]:
+            paused = False
+
+        pygame.display.update()
+        clock.tick(30)
 
 
 game_running()
