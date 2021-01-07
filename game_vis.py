@@ -26,7 +26,7 @@ display_height = 1024
 display = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('Teleportation cube')
 
-icon = pygame.image.load('свас.jpg')
+icon = load_image('usr_slavs.png')
 pygame.display.set_icon(icon)
 
 background = pygame.image.load(r'background.jpg')
@@ -37,11 +37,11 @@ enemy_x, enemy_y = display_width - 50, display_height - enemy_height - 150
 usr_width = 75
 usr_height = 75
 usr_x = display_width // 3 - 200
-usr_y = display_height - usr_height - 475
-usr_image = load_image('usr_1.png')
+usr_y = display_height - usr_height - 450
+usr_image = load_image('герой.png')
 
 clock = pygame.time.Clock()
-FPS = 90
+FPS = 80
 invisible = False
 can_jump = False
 can_tp_up = False
@@ -82,7 +82,7 @@ def game_running():
             print('w')
             can_tp_up = True
 
-        if keys[pygame.K_w]:
+        if keys[pygame.K_SPACE]:
             print('SPACE')
             can_jump = True
 
@@ -207,7 +207,7 @@ def pause():
                 pygame.quit()
                 quit()
 
-        print_text('Paused', 160, 300)
+        print_text('Пауза', 160, 300)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
